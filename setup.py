@@ -1,22 +1,14 @@
 #!/usr/bin/env python3
 
-import sys
-
-from glob import glob
 from setuptools import setup, find_packages
 from setuptools.extension import Extension
+
+from Cython.Build import cythonize
 
 from pyv4l2 import __version__
 
 
-try:
-    sys.argv.remove('--use-cython')
-    USE_CYTHON = True
-except ValueError:
-    USE_CYTHON = False
-
-
-extension_name = 'pyx' if USE_CYTHON else 'c'
+extension_name = 'pyx'
 extensions = [
     Extension(
         'pyv4l2.frame',
@@ -30,9 +22,7 @@ extensions = [
     )
 ]
 
-if USE_CYTHON:
-    from Cython.Build import cythonize
-    extensions = cythonize(extensions)
+extensions = cythonize(extensions)
 
 setup(
     name='pyv4l2',
@@ -50,7 +40,7 @@ setup(
     author_email='duanhongyi@doopai.com',
     url='https://github.com/duanhongyi/pyv4l2',
     license='GNU Lesser General Public License v3 (LGPLv3)',
-    setup_requires=['Cython >= 0.18', ],
+    setup_requires=['Cython>=0.18'],
     extras_require={
         'examples': ['pillow', 'numpy'],
     },
